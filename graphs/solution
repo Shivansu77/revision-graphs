@@ -1,0 +1,61 @@
+class Solution {
+    class Pair implements Comparable <Pair>{
+        int v;
+        int wsf;
+        Pair(int v,int wsf){
+            this.v=v;
+            this.wsf=wsf;
+        }
+        public int compareTo(Pair other){
+            return Integer.compare(this.wsf,other.wsf);
+        }
+    }
+    public int[] dijkstra(int v, int[][] edges, int src) {
+        // code here
+        PriorityQueue<Pair>pq=new PriorityQueue<>();
+        List<List<int[]>>adj = new ArrayList<>();
+        for(int i=0;i<v;i++){
+            adj.add(new ArrayList<>());
+            
+        }
+        
+        for(int []edge:edges){
+            int u=edge[0];
+            int neighbor=edge[1];
+            int weight=edge[2];
+            adj.get(u).add(new int[]{neighbor,weight});
+            adj.get(neighbor).add(new int[]{u,weight});
+        }
+        
+        int [] dist=new int[v];
+        Arrays.fill(dist,Integer.MAX_VALUE);
+        dist[src]=0;
+        pq.add(new Pair(src,0));
+        boolean []vis=new boolean[v];
+        
+        
+        while(!pq.isEmpty()){
+            Pair curr=pq.remove();
+            int u=curr.v;
+            
+            if(vis[u]) continue;
+            vis[u]=true;
+            
+            for(int []nbr:adj.get(u)){
+                int v_nbr=nbr[0];
+                int weight=nbr[1];
+                if(!vis[v_nbr]){
+                    int newDist=curr.wsf+weight;
+                    if(newDist<dist[v_nbr]){
+                        dist[v_nbr]=newDist;
+                        pq.add(new Pair(v_nbr,newDist));
+                    }
+                }
+            }
+        }
+        
+        
+        return dist;
+        
+    }
+}
